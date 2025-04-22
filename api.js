@@ -3,7 +3,7 @@ const Products = require('./products')
 const Orders = require('./orders')
 const autoCatch = require('./lib/auto-catch')
 const express = require('express');
-const app = express(); // <--- This line is necessary
+const app = express(); 
 app.use(express.json());
 
 /**
@@ -97,34 +97,16 @@ async function listOrders (req, res, next) {
   res.json(orders)
 }
 
-app.put('/orders/:id', async (req, res) => {
-  try {
-    const updatedOrder = await orders.edit(req.params.id, req.body);
-    res.json(updatedOrder);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+async function editOrder(req, res, next) {
+  const change = req.body
+  const order = await Orders.edit(req.params.id, change)
+  res.json(order)
+}
 
-app.get('/products', async (req, res) => {
-  try {
-    const products = await products.list(); // or however you retrieve the products
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
-app.delete('/orders/:id', async (req, res) => {
-  try {
-    await orders.destroy(req.params.id);
-    res.status(204).end();
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
+async function deleteOrder(req, res, next) {
+  await Orders.destroy(req.params.id)
+  res.status(204).send()  // No Content
+}
 
 module.exports = autoCatch({
   handleRoot,
@@ -134,5 +116,7 @@ module.exports = autoCatch({
   editProduct,
   deleteProduct,
   listOrders,
-  createOrder
+  createOrder,
+  editOrder,
+  deleteOrder
 });
