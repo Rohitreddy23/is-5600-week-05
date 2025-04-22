@@ -97,5 +97,13 @@ async function edit(_id, changes) {
   async function destroy(_id) {
     await Order.findByIdAndDelete(_id)
   }
-  
+
+module.exports = autoCatch({
+    create,
+    get,
+    list,
+    edit,      
+    destroy     
+});
+
   
