@@ -82,11 +82,16 @@ async function create (fields) {
  * @param {Object} changes
  * @returns {Promise<Object>}
  */
-async function edit(_id, changes) {
-    const updatedOrder = await Order.findByIdAndUpdate(_id, changes, { new: true })
-      .populate('products')
-      .exec()
-    return updatedOrder
+async function edit(_id, change) {
+    const order = await get(_id)
+  
+    Object.keys(change).forEach(function (key) {
+      order[key] = change[key]
+    })
+  
+    await order.save()
+    await order.populate('products')
+    return order
   }
   
   /**
@@ -95,7 +100,7 @@ async function edit(_id, changes) {
    * @returns {Promise<void>}
    */
   async function destroy(_id) {
-    await Order.findByIdAndDelete(_id)
+    await Order.deleteOne({ _id })
   }
 
 module.exports = autoCatch({
