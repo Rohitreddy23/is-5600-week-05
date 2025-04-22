@@ -2,9 +2,7 @@ const path = require('path')
 const Products = require('./products')
 const Orders = require('./orders')
 const autoCatch = require('./lib/auto-catch')
-const express = require('express');
-const app = express(); 
-app.use(express.json());
+
 
 /**
  * Handle the root route
